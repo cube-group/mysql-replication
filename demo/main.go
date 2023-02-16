@@ -1,11 +1,3 @@
-# mysql-replication
-mysql replication sync with canal-server
-
-## k8s install canal-server
-[kubernetes apply.yaml](k8s/apply.yaml)
-
-## golang run demo
-```go
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -48,5 +40,3 @@ func main() {
 func handleForDML(msg core.ReplicationMessage) {
 	log.Printf("[%v] Schema: %v Table: %v %+v", msg.EventType, msg.SchemaName, msg.TableName, msg.Body)
 }
-
-```
