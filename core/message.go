@@ -9,4 +9,5 @@ type ReplicationMessage struct {
 	TableName     string
 	EventType     entry.EventType
 	Body          map[string]interface{}
+	Columns       []string // the column about updated
 }

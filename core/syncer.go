@@ -126,21 +126,23 @@ func (t *ReplicationSyncer) send(header *pbe.Header, rowData *pbe.RowData) {
 		EventType:     header.GetEventType(),
 	}
 	switch msg.EventType {
-	case pbe.EventType_INSERT, pbe.EventType_UPDATE:
-		msg.Body = t.getBody(rowData.GetAfterColumns(), true)
+	case pbe.EventType_UPDATE, pbe.EventType_INSERT:
+		msg.Body, msg.Columns = t.getBody(rowData.GetAfterColumns(), true)
 		t.dmlHandler(msg)
 	case pbe.EventType_DELETE:
-		msg.Body = t.getBody(rowData.GetBeforeColumns(), false)
+		msg.Body, _ = t.getBody(rowData.GetBeforeColumns(), false)
 		t.dmlHandler(msg)
 	}
 }
 
-func (t *ReplicationSyncer) getBody(columns []*pbe.Column, updated bool) map[string]interface{} {
-	res := make(map[string]interface{})
+func (t *ReplicationSyncer) getBody(columns []*pbe.Column, updated bool) (res map[string]interface{}, updatedColumns []string) {
+	res = make(map[string]interface{})
+	updatedColumns = make([]string, 0)
 	for _, col := range columns {
-		if !updated || (updated && col.Updated) {
-			res[col.GetName()] = col.GetValue()
+		if updated && col.Updated {
+			updatedColumns = append(updatedColumns, col.GetName())
 		}
+		res[col.GetName()] = col.GetValue()
 	}
-	return res
+	return
 }
