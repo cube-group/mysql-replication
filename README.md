@@ -46,7 +46,8 @@ func main() {
 }
 
 func handleForDML(msg core.ReplicationMessage) {
-	log.Printf("[%v] Schema: %v Table: %v %+v", msg.EventType, msg.SchemaName, msg.TableName, msg.Body)
+	log.Printf("[%v] Schema: %v Table: %v UpdatedColumns: %+v %+v", msg.EventType, msg.SchemaName, msg.TableName, msg.Columns, msg.Body)
 }
+
 
 ```
